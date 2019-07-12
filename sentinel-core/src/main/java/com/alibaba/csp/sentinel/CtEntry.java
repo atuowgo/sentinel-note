@@ -49,6 +49,7 @@ class CtEntry extends Entry {
         if (context instanceof NullContext) {
             return;
         }
+        /*Tip:将线程中当前入口节点放在Context中，每次新生成下一个入口时，将之前的入口作为父节点接入新入口，新入口作为当前节点存入Context中*/
         this.parent = context.getCurEntry();
         if (parent != null) {
             ((CtEntry)parent).child = this;
@@ -67,6 +68,7 @@ class CtEntry extends Entry {
             if (context instanceof NullContext) {
                 return;
             }
+            /*Tip:curEntry指向调用链的最后一个Entry,如果不按后进先出的顺序exit，则会抛出异常，并且将错误Entry之前的节点exit*/
             if (context.getCurEntry() != this) {
                 String curEntryNameInContext = context.getCurEntry() == null ? null : context.getCurEntry().getResourceWrapper().getName();
                 // Clean previous call stack.
@@ -79,7 +81,7 @@ class CtEntry extends Entry {
                     + ", current entry in context: <%s>, but expected: <%s>", curEntryNameInContext, resourceWrapper.getName());
                 throw new ErrorEntryFreeException(errorMessage);
             } else {
-                //Tip:在退出时执行处理槽链的exit方法
+                /*Tip:在退出时执行处理槽链的exit方法*/
                 if (chain != null) {
                     chain.exit(context, resourceWrapper, count, args);
                 }
@@ -91,7 +93,7 @@ class CtEntry extends Entry {
                 if (parent == null) {
                     // Default context (auto entered) will be exited automatically.
                     if (ContextUtil.isDefaultContext(context)) {
-                        //Tip:如果是默认的根节点，则清空ThreadLocal
+                        /*Tip:如果是默认的根节点，则清空ThreadLocal*/
                         ContextUtil.exit();
                     }
                 }

@@ -32,9 +32,10 @@ import com.alibaba.csp.sentinel.property.DynamicSentinelProperty;
 import com.alibaba.csp.sentinel.property.PropertyListener;
 import com.alibaba.csp.sentinel.property.SentinelProperty;
 
+ /** Tip:存储着Flow限流规则，持有监听器，当规则发生修改时，通知监听器动作发生
+     * 本身持有监听器实现，当事件发生时会通知到自身，然后修改自身持有的规则**/
+
 /**
- * Tip:存储着Flow限流规则，持有监听器，当规则发生修改时，通知监听器动作发生
- * 本身持有监听器实现，当事件发生时会通知到自身，然后修改自身持有的规则
  * <p>
  * One resources can have multiple rules. And these rules take effects in the following order:
  * <ol>
@@ -91,8 +92,8 @@ public class FlowRuleManager {
         return rules;
     }
 
+    /* Tip:会丢弃之前的规则，使用新的规则 */
     /**
-     * Tip:会丢弃之前的规则，使用新的规则
      * Load {@link FlowRule}s, former rules will be replaced.
      *
      * @param rules new rules to load.
@@ -131,7 +132,7 @@ public class FlowRuleManager {
 
         @Override
         public void configUpdate(List<FlowRule> value) {
-            Map<String, List<FlowRule>> rules = FlowRuleUtil.buildFlowRuleMap(value);
+            Map<String, List<FlowRule>> rules = FlowRuleUtil.buildFlowRuleMap(value);//Tip:设置TrafficShapingController
             if (rules != null) {
                 flowRules.clear();
                 flowRules.putAll(rules);

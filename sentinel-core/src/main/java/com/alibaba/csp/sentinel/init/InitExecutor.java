@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.alibaba.csp.sentinel.log.RecordLog;
 
-//Tip:从依赖包中获取InitFun接口的实现类，并根据InitOrder注解指定的顺序，依次实例化
+/*Tip:从依赖包中获取InitFun接口的实现类，并根据InitOrder注解指定的顺序，依次实例化*/
 
 /**
  * Load registered init functions and execute in order.

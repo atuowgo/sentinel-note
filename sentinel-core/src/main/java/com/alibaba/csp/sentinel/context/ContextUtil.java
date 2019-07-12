@@ -62,7 +62,7 @@ public class ContextUtil {
         initDefaultContext();
     }
 
-    //Tip:赋值默认的入口节点
+    /*Tip:赋值默认的入口节点*/
     private static void initDefaultContext() {
         String defaultContextName = Constants.CONTEXT_DEFAULT_NAME;
         EntranceNode node = new EntranceNode(new StringResourceWrapper(defaultContextName, EntryType.IN), null);
@@ -119,7 +119,7 @@ public class ContextUtil {
     }
 
     protected static Context trueEnter(String name, String origin) {
-        Context context = contextHolder.get();
+        Context context = contextHolder.get();/*Tip:一个线程上下文中只有一个context，在入口节点调用*/
         if (context == null) {
             Map<String, DefaultNode> localCacheNameMap = contextNameNodeMap;
             DefaultNode node = localCacheNameMap.get(name);
@@ -138,7 +138,7 @@ public class ContextUtil {
                             } else {
                                 node = new EntranceNode(new StringResourceWrapper(name, EntryType.IN), null);
                                 // Add entrance node.
-                                Constants.ROOT.addChild(node);
+                                Constants.ROOT.addChild(node);/*Context初始化的操作节点为入口节点，默认绑定了一个Node信息，没有ClusterNode信息*/
 
                                 Map<String, DefaultNode> newMap = new HashMap<>(contextNameNodeMap.size() + 1);
                                 newMap.putAll(contextNameNodeMap);
@@ -153,7 +153,7 @@ public class ContextUtil {
             }
             context = new Context(node, name);
             context.setOrigin(origin);
-            contextHolder.set(context);
+            contextHolder.set(context);/*Tip:将context放到线程上下文中*/
         }
 
         return context;

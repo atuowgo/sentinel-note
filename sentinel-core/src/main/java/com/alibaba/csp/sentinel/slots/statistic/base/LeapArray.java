@@ -40,11 +40,11 @@ import com.alibaba.csp.sentinel.util.TimeUtil;
  */
 public abstract class LeapArray<T> {
 
-    protected int windowLengthInMs;
-    protected int sampleCount;
-    protected int intervalInMs;
+    protected int windowLengthInMs;/*Tip:窗口时间间隔，等于统计时间段/窗口数量*/
+    protected int sampleCount;/*Tip:窗口数量*/
+    protected int intervalInMs;/*Tip:统计时间段，需为窗口数量的整数倍*/
 
-    protected final AtomicReferenceArray<WindowWrap<T>> array;
+    protected final AtomicReferenceArray<WindowWrap<T>> array;/*窗口包装对象队列,只保存sampleCount个窗口*/
 
     /**
      * The conditional (predicate) update lock is used only when current bucket is deprecated.
@@ -95,14 +95,14 @@ public abstract class LeapArray<T> {
      */
     protected abstract WindowWrap<T> resetWindowTo(WindowWrap<T> windowWrap, long startTime);
 
-    private int calculateTimeIdx(/*@Valid*/ long timeMillis) {
+    private int calculateTimeIdx(/*@Valid*/ long timeMillis) {/*Tip:计算所给时间属于哪个窗口*/
         long timeId = timeMillis / windowLengthInMs;
         // Calculate current index so we can map the timestamp to the leap array.
         return (int)(timeId % array.length());
     }
 
-    protected long calculateWindowStart(/*@Valid*/ long timeMillis) {
-        return timeMillis - timeMillis % windowLengthInMs;
+    protected long calculateWindowStart(/*@Valid*/ long timeMillis) {/*Tip:计算所给时间所在窗口的开始时间*/
+        return timeMillis - timeMillis % windowLengthInMs;/*Tip:窗口的开始时间都是整数*/
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class LeapArray<T> {
      * @param timeMillis a valid timestamp in milliseconds
      * @return current bucket item at provided timestamp if the time is valid; null if time is invalid
      */
-    public WindowWrap<T> currentWindow(long timeMillis) {
+    public WindowWrap<T> currentWindow(long timeMillis) {/*Tip:是时间在滑动，窗口固定不变，窗口数组为一个环，时间循环获得窗口*/
         if (timeMillis < 0) {
             return null;
         }
@@ -129,7 +129,7 @@ public abstract class LeapArray<T> {
          */
         while (true) {
             WindowWrap<T> old = array.get(idx);
-            if (old == null) {
+            if (old == null) {/*Tip:当前窗口还没有初始化*/
                 /*
                  *     B0       B1      B2    NULL      B4
                  * ||_______|_______|_______|_______|_______||___
@@ -142,15 +142,15 @@ public abstract class LeapArray<T> {
                  * then try to update circular array via a CAS operation. Only one thread can
                  * succeed to update, while other threads yield its time slice.
                  */
-                WindowWrap<T> window = new WindowWrap<T>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
-                if (array.compareAndSet(idx, null, window)) {
+                WindowWrap<T> window = new WindowWrap<T>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));/*Tip:初始化当前窗口*/
+                if (array.compareAndSet(idx, null, window)) {/*Tip:当前线程处理失败，表示其他线程已经处理成功，让出时间片重试，注意，这里需要保证初始化动作只能被一个线程处理，不能重复设置*/
                     // Successfully updated, return the created bucket.
                     return window;
                 } else {
                     // Contention failed, the thread will yield its time slice to wait for bucket available.
                     Thread.yield();
                 }
-            } else if (windowStart == old.windowStart()) {
+            } else if (windowStart == old.windowStart()) {/*Tip:当前时间所在窗口未失效，返回已有窗口*/
                 /*
                  *     B0       B1      B2     B3      B4
                  * ||_______|_______|_______|_______|_______||___
@@ -163,7 +163,7 @@ public abstract class LeapArray<T> {
                  * that means the time is within the bucket, so directly return the bucket.
                  */
                 return old;
-            } else if (windowStart > old.windowStart()) {
+            } else if (windowStart > old.windowStart()) {/*Tip:当前时间所在窗口失效，重置窗口*/
                 /*
                  *   (old)
                  *             B0       B1      B2    NULL      B4
@@ -181,7 +181,7 @@ public abstract class LeapArray<T> {
                  * The update lock is conditional (tiny scope) and will take effect only when
                  * bucket is deprecated, so in most cases it won't lead to performance loss.
                  */
-                if (updateLock.tryLock()) {
+                if (updateLock.tryLock()) {/*Tip:保证只有一个线程处理，其他线程没有获取到锁则放弃时间片重试*/
                     try {
                         // Successfully get the update lock, now we reset the bucket.
                         return resetWindowTo(old, windowStart);

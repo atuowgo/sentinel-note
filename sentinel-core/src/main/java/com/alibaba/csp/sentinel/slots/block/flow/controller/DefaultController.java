@@ -48,8 +48,8 @@ public class DefaultController implements TrafficShapingController {
     @Override
     public boolean canPass(Node node, int acquireCount, boolean prioritized) {
         int curCount = avgUsedTokens(node);
-        if (curCount + acquireCount > count) {
-            if (prioritized && grade == RuleConstant.FLOW_GRADE_QPS) {
+        if (curCount + acquireCount > count) {//Tip:超过设定的token数量
+            if (prioritized && grade == RuleConstant.FLOW_GRADE_QPS) {//Tip:如果设置了优先级，则等待一定时间
                 long currentTime;
                 long waitInMs;
                 currentTime = TimeUtil.currentTimeMillis();
@@ -68,7 +68,7 @@ public class DefaultController implements TrafficShapingController {
         return true;
     }
 
-    private int avgUsedTokens(Node node) {
+    private int avgUsedTokens(Node node) {//Tip:如果是根据线程数来判断，则返回该节点当前的线程数，否则返回该节点通过的QPS
         if (node == null) {
             return DEFAULT_AVG_USED_TOKENS;
         }

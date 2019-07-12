@@ -123,7 +123,7 @@ import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
  * @see ContextUtil
  */
 public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
-
+    /*Tip:Context的Name对应不同的EntranceNode入口，因为ProcessorChain跟ResourcesName有关，所以这里表示的是根据ContextName-ResourcesName区分的Node*/
     /**
      * {@link DefaultNode}s of the same resource in different context.
      */
@@ -150,6 +150,7 @@ public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
          * The answer is all {@link DefaultNode}s with same resource name share one
          * {@link ClusterNode}. See {@link ClusterBuilderSlot} for detail.
          */
+        /*查看在当前线程上下文中是否有该资源的节点信息*/
         DefaultNode node = map.get(context.getName());
         if (node == null) {
             synchronized (this) {
@@ -162,12 +163,12 @@ public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
                     map = cacheMap;
                 }
                 // Build invocation tree
-                ((DefaultNode)context.getLastNode()).addChild(node);//Tip:将当前入口加入调用树尾部
+                ((DefaultNode)context.getLastNode()).addChild(node);/*Tip:将当前入口加入调用树尾部*/
             }
         }
 
-        context.setCurNode(node);//Tip:设置会话当前为调用的入口
-        fireEntry(context, resourceWrapper, node, count, prioritized, args);//Tip:将当前入口作用在下一个处理槽
+        context.setCurNode(node);/*Tip:设置会话当前为调用的入口*/
+        fireEntry(context, resourceWrapper, node, count, prioritized, args);/*Tip:将当前入口作用在下一个处理槽*/
     }
 
     @Override

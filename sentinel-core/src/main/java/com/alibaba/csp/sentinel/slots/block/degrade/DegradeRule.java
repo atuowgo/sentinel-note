@@ -162,32 +162,32 @@ public class DegradeRule extends AbstractRule {
 
     @Override
     public boolean passCheck(Context context, DefaultNode node, int acquireCount, Object... args) {
-        if (cut.get()) {
+        if (cut.get()) {/*Tip:若该资源正处于降级中，则直接返回不通过*/
             return false;
         }
 
-        ClusterNode clusterNode = ClusterBuilderSlot.getClusterNode(this.getResource());
+        ClusterNode clusterNode = ClusterBuilderSlot.getClusterNode(this.getResource());/*Tip:按照该资源的Cluster数据统计*/
         if (clusterNode == null) {
             return true;
         }
 
-        if (grade == RuleConstant.DEGRADE_GRADE_RT) {
+        if (grade == RuleConstant.DEGRADE_GRADE_RT) {/*Tip：按响应时间降级，count标识平均响应时间*/
             double rt = clusterNode.avgRt();
-            if (rt < this.count) {
+            if (rt < this.count) {/*Tip：平均响应时间小于设置的时间，则通过，重置通过的记录数*/
                 passCount.set(0);
                 return true;
             }
 
             // Sentinel will degrade the service only if count exceeds.
-            if (passCount.incrementAndGet() < RT_MAX_EXCEED_N) {
+            if (passCount.incrementAndGet() < RT_MAX_EXCEED_N) {/*Tip:通过的记录数累计未达到设置的最大上线，则放行*/
                 return true;
             }
-        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_RATIO) {
+        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_RATIO) {/*Tip：按异常率降级,count标识异常率*/
             double exception = clusterNode.exceptionQps();
             double success = clusterNode.successQps();
             double total = clusterNode.totalQps();
             // if total qps less than RT_MAX_EXCEED_N, pass.
-            if (total < RT_MAX_EXCEED_N) {
+            if (total < RT_MAX_EXCEED_N) {/*Tip:总的QPS小于设置阈值，直接通过*/
                 return true;
             }
 
@@ -199,14 +199,14 @@ public class DegradeRule extends AbstractRule {
             if (exception / success < count) {
                 return true;
             }
-        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT) {
+        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT) {/*Tip:根据异常数降级，count标识异常数*/
             double exception = clusterNode.totalException();
             if (exception < count) {
                 return true;
             }
         }
 
-        if (cut.compareAndSet(false, true)) {
+        if (cut.compareAndSet(false, true)) {/*Tip：若检查不通过，且该资源未执行过降级，则执行降级，主要通过设置定时器，在超时时间内，将该资源设置为不可用，时间到了就重置该资源，并关闭降级标志*/
             ResetTask resetTask = new ResetTask(this);
             pool.schedule(resetTask, timeWindow, TimeUnit.SECONDS);
         }

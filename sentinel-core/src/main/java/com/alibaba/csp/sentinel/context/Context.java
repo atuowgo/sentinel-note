@@ -74,7 +74,7 @@ public class Context {
     /**
      * The origin of this context (usually indicate different invokers, e.g. service consumer name or origin IP).
      */
-    private String origin = "";
+    private String origin = "";/*Tip:Context代表一个Entrance，origin指示是谁发起的*/
 
     private final boolean async;
 
@@ -176,7 +176,7 @@ public class Context {
      *
      * @return the parent node of the current.
      */
-    public Node getLastNode() {
+    public Node getLastNode() {/*Tip:获取最近的上一个节点*/
         if (curEntry != null && curEntry.getLastNode() != null) {
             return curEntry.getLastNode();
         } else {

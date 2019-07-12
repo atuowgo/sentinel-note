@@ -49,7 +49,7 @@ public class CtSph implements Sph {
      * {@link ProcessorSlotChain}, no matter in which {@link Context}.
      */
     private static volatile Map<ResourceWrapper, ProcessorSlotChain> chainMap
-        = new HashMap<ResourceWrapper, ProcessorSlotChain>();
+        = new HashMap<ResourceWrapper, ProcessorSlotChain>();/*Tip:相同资源共享一个ProcessorSlotChain*/
 
     private static final Object LOCK = new Object();
 
@@ -125,15 +125,15 @@ public class CtSph implements Sph {
 
         if (context == null) {
             // Using default context.
-            context = MyContextUtil.myEnter(Constants.CONTEXT_DEFAULT_NAME, "", resourceWrapper.getType());
+            context = MyContextUtil.myEnter(Constants.CONTEXT_DEFAULT_NAME, "", resourceWrapper.getType());/*Tip:如果当前没有上下文对象，使用默认上下文对象，绑定到sentinel_default_context*/
         }
 
         // Global switch is close, no rule checking will do.
         if (!Constants.ON) {
-            return new CtEntry(resourceWrapper, null, context);
+            return new CtEntry(resourceWrapper, null, context);/*Tip:全局开关关闭，不绑定处理槽*/
         }
 
-        ProcessorSlot<Object> chain = lookProcessChain(resourceWrapper);
+        ProcessorSlot<Object> chain = lookProcessChain(resourceWrapper);/*Tip:根据ResourceName查找处理槽链*/
 
         /*
          * Means amount of resources (slot chain) exceeds {@link Constants.MAX_SLOT_CHAIN_SIZE},
@@ -143,12 +143,12 @@ public class CtSph implements Sph {
             return new CtEntry(resourceWrapper, null, context);
         }
 
-        Entry e = new CtEntry(resourceWrapper, chain, context);
+        Entry e = new CtEntry(resourceWrapper, chain, context);/*Tip:在这步还没有对应的Node信息*/
         try {
-            //Tip:CtEntry表示（当前会话入口）
-            //每一个资源的调用在进入调用前都要经过一个处理槽链的处理
-            //为统计资源的使用请求收集信息并且执行额外动作
-            //每一个资源的调用在退出资源后都要执行exit动作
+            /**Tip:CtEntry表示（当前会话入口）
+            每一个资源的调用在进入调用前都要经过一个处理槽链的处理
+            为统计资源的使用请求收集信息并且执行额外动作
+            每一个资源的调用在退出资源后都要执行exit动作*/
             chain.entry(context, resourceWrapper, null, count, prioritized, args);
         } catch (BlockException e1) {
             e.exit(count, args);

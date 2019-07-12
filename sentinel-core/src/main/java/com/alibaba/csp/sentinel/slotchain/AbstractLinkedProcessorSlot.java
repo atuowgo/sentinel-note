@@ -16,8 +16,8 @@
 package com.alibaba.csp.sentinel.slotchain;
 
 import com.alibaba.csp.sentinel.context.Context;
-//Tip:前一个节点entry-前一个节点内部fireEntry-下一个节点transformEntry-下一个节点entry
-//Tip:前一个节点exit-前一个节点内部fireExit-下一个节点exit
+/**Tip:前一个节点entry-前一个节点内部fireEntry-下一个节点transformEntry-下一个节点entry
+        前一个节点exit-前一个节点内部fireExit-下一个节点exit **/
 /**
  * @author qinan.qn
  * @author jialiang.linjl

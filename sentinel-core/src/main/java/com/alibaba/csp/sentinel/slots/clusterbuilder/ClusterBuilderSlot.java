@@ -30,7 +30,7 @@ import com.alibaba.csp.sentinel.slotchain.AbstractLinkedProcessorSlot;
 import com.alibaba.csp.sentinel.slotchain.ProcessorSlotChain;
 import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
 import com.alibaba.csp.sentinel.slotchain.StringResourceWrapper;
-//Tip:关联ClusterNode
+/*Tip:关联ClusterNode;因为同一个资源关联同一个处理槽链，所以同一种资源都会经过该槽，直接在该槽中统计信息*/
 /**
  * <p>
  * This slot maintains resource running statistics (response time, qps, thread
@@ -64,11 +64,11 @@ public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode>
      * at the very beginning while concurrent map will hold the lock all the time.
      * </p>
      */
-    private static volatile Map<ResourceWrapper, ClusterNode> clusterNodeMap = new HashMap<>();
+    private static volatile Map<ResourceWrapper, ClusterNode> clusterNodeMap = new HashMap<>();/*存储所有资源的ClusterNode信息,static*/
 
     private static final Object lock = new Object();
 
-    private volatile ClusterNode clusterNode = null;
+    private volatile ClusterNode clusterNode = null;/*一种资源只会有一个ClusterNode信息*/
 
     @Override
     public void entry(Context context, ResourceWrapper resourceWrapper, DefaultNode node, int count,
@@ -87,7 +87,7 @@ public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode>
                 }
             }
         }
-        node.setClusterNode(clusterNode);
+        node.setClusterNode(clusterNode);/*该Node为某个Context下的某一资源Node，绑定全局的ClusterNode*/
 
         /*
          * if context origin is set, we should get or create a new {@link Node} of

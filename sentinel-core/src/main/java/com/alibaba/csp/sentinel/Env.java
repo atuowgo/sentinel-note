@@ -33,7 +33,7 @@ public class Env {
 
     static {
         // If init fails, the process will exit.
-        InitExecutor.doInit();
+        InitExecutor.doInit();/*Tip:初始化SPI*/
     }
 
 }

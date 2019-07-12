@@ -107,7 +107,7 @@ final class FlowRuleChecker {
         } else if (RuleConstant.LIMIT_APP_DEFAULT.equals(limitApp)) {
             if (strategy == RuleConstant.STRATEGY_DIRECT) {
                 // Return the cluster node.
-                return node.getClusterNode();
+                return node.getClusterNode();//Tip:统计的是该类型的Cluster数据
             }
 
             return selectReferenceNode(rule, context, node);

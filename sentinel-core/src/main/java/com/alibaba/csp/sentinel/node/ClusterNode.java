@@ -41,7 +41,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
  * @author jialiang.linjl
  */
 public class ClusterNode extends StatisticNode {
-
+    /*Tip:ClusterNode统计了同一种资源的统计信息，而不区分不同的Context来源，内部使用originCountMap区分不同的来源的统计情况*/
     /**
      * <p>The origin map holds the pair: (origin, originNode) for one specific resource.</p>
      * <p>
