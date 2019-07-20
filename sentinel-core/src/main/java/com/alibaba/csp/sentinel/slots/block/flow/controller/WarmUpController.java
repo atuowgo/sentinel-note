@@ -80,7 +80,7 @@ public class WarmUpController implements TrafficShapingController {
         construct(count, warmUpPeriodInSec, 3);
     }
 
-    private void construct(double count, int warmUpPeriodInSec, int coldFactor) {
+    private void construct(double count, int warmUpPeriodInSec, int coldFactor) {/*Tip:开始时按照一定速率生成令牌，超过warmUpPeriodInSec后按照slop速度生成令牌*/
 
         if (coldFactor <= 1) {
             throw new IllegalArgumentException("Cold factor should be larger than 1");
@@ -111,7 +111,7 @@ public class WarmUpController implements TrafficShapingController {
     }
 
     @Override
-    public boolean canPass(Node node, int acquireCount, boolean prioritized) {
+    public boolean canPass(Node node, int acquireCount, boolean prioritized) {/*Tip:类似guava的预热限流模式，可参考https://www.jianshu.com/p/280bf2dbd6f0*/
         long passQps = (long) node.passQps();
 
         long previousQps = (long) node.previousPassQps();

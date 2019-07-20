@@ -68,15 +68,15 @@ final class FlowRuleChecker {
         String refResource = rule.getRefResource();
         int strategy = rule.getStrategy();
 
-        if (StringUtil.isEmpty(refResource)) {
+        if (StringUtil.isEmpty(refResource)) {/*Tip:如果资源名为空，返回空*/
             return null;
         }
 
-        if (strategy == RuleConstant.STRATEGY_RELATE) {
+        if (strategy == RuleConstant.STRATEGY_RELATE) {/*Tip:RELATE策略，使用ClusterNode节点数据*/
             return ClusterBuilderSlot.getClusterNode(refResource);
         }
 
-        if (strategy == RuleConstant.STRATEGY_CHAIN) {
+        if (strategy == RuleConstant.STRATEGY_CHAIN) {/*Tip:CHIAN策略，且当前节点名同规则名一致，使用当前节点数据*/
             if (!refResource.equals(context.getName())) {
                 return null;
             }
@@ -97,22 +97,22 @@ final class FlowRuleChecker {
         int strategy = rule.getStrategy();
         String origin = context.getOrigin();
 
-        if (limitApp.equals(origin) && filterOrigin(origin)) {
+        if (limitApp.equals(origin) && filterOrigin(origin)) {/*Tip:作用于origin上且除default和other外,如果是DIRECT策略，返回origin节点*/
             if (strategy == RuleConstant.STRATEGY_DIRECT) {
                 // Matches limit origin, return origin statistic node.
                 return context.getOriginNode();
             }
 
             return selectReferenceNode(rule, context, node);
-        } else if (RuleConstant.LIMIT_APP_DEFAULT.equals(limitApp)) {
+        } else if (RuleConstant.LIMIT_APP_DEFAULT.equals(limitApp)) {/*Tip:作用于default上，如果是DIRECT策略，返回Cluster节点*/
             if (strategy == RuleConstant.STRATEGY_DIRECT) {
                 // Return the cluster node.
-                return node.getClusterNode();//Tip:统计的是该类型的Cluster数据
+                return node.getClusterNode();/*Tip:统计的是该类型的Cluster数据*/
             }
 
             return selectReferenceNode(rule, context, node);
         } else if (RuleConstant.LIMIT_APP_OTHER.equals(limitApp)
-            && FlowRuleManager.isOtherOrigin(origin, rule.getResource())) {
+            && FlowRuleManager.isOtherOrigin(origin, rule.getResource())) {/*Tip:作用于other上，如果是DIRECT策略，返回origin节点*/
             if (strategy == RuleConstant.STRATEGY_DIRECT) {
                 return context.getOriginNode();
             }

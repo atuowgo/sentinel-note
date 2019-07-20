@@ -279,15 +279,15 @@ public class StatisticNode implements Node {
     }
 
     @Override
-    public long tryOccupyNext(long currentTime, int acquireCount, double threshold) {
-        double maxCount = threshold * IntervalProperty.INTERVAL / 1000;
-        long currentBorrow = rollingCounterInSecond.waiting();
-        if (currentBorrow >= maxCount) {
+    public long tryOccupyNext(long currentTime, int acquireCount, double threshold) {/*Tip:threshold为规则中设置的次数*/
+        double maxCount = threshold * IntervalProperty.INTERVAL / 1000;/*Tip:规则设定估算的每秒内通过次数*/
+        long currentBorrow = rollingCounterInSecond.waiting();/*Tip:当前窗口已经等待的次数*/
+        if (currentBorrow >= maxCount) {/*Tip:如果已经大于允许的最大值，借用失败*/
             return OccupyTimeoutProperty.getOccupyTimeout();
         }
 
         int windowLength = IntervalProperty.INTERVAL / SampleCountProperty.SAMPLE_COUNT;
-        long earliestTime = currentTime - currentTime % windowLength + windowLength - IntervalProperty.INTERVAL;
+        long earliestTime = currentTime - currentTime % windowLength + windowLength - IntervalProperty.INTERVAL;/*Tip:前一个循环的开头  `*/
 
         int idx = 0;
         /*
@@ -296,17 +296,17 @@ public class StatisticNode implements Node {
          * lead more tokens be borrowed.
          */
         long currentPass = rollingCounterInSecond.pass();
-        while (earliestTime < currentTime) {
-            long waitInMs = idx * windowLength + windowLength - currentTime % windowLength;
-            if (waitInMs >= OccupyTimeoutProperty.getOccupyTimeout()) {
+        while (earliestTime < currentTime) {/*Tip:参考之前的窗口，估算请求，看能否进行借用*/
+            long waitInMs = idx * windowLength + windowLength - currentTime % windowLength;/*Tip:等待按窗口，尝试在后续的窗口中借用token*/
+            if (waitInMs >= OccupyTimeoutProperty.getOccupyTimeout()) {/*Tip:等待时间超过上限，结束*/
                 break;
             }
             long windowPass = rollingCounterInSecond.getWindowPass(earliestTime);
-            if (currentPass + currentBorrow + acquireCount - windowPass <= maxCount) {
+            if (currentPass + currentBorrow + acquireCount - windowPass <= maxCount) {/*Tip:按之前的窗口通过值进行估算，还有token剩余，则返回可等待时间*/
                 return waitInMs;
             }
-            earliestTime += windowLength;
-            currentPass -= windowPass;
+            earliestTime += windowLength;/*Tip:尝试下一个窗口*/
+            currentPass -= windowPass;/*Tip:估算当前窗口的下一个窗口已经通过的值*/
             idx++;
         }
 

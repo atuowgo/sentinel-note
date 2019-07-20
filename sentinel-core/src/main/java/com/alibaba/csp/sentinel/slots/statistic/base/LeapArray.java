@@ -210,11 +210,11 @@ public abstract class LeapArray<T> {
             return null;
         }
         long timeId = (timeMillis - windowLengthInMs) / windowLengthInMs;
-        int idx = (int)(timeId % array.length());
+        int idx = (int)(timeId % array.length());/*Tip:上一个窗口的位置索引*/
         timeMillis = timeMillis - windowLengthInMs;
         WindowWrap<T> wrap = array.get(idx);
 
-        if (wrap == null || isWindowDeprecated(wrap)) {
+        if (wrap == null || isWindowDeprecated(wrap)) {/*Tip:不存在或者已经过期*/
             return null;
         }
 
@@ -266,7 +266,7 @@ public abstract class LeapArray<T> {
         return isWindowDeprecated(TimeUtil.currentTimeMillis(), windowWrap);
     }
 
-    public boolean isWindowDeprecated(long time, WindowWrap<T> windowWrap) {
+    public boolean isWindowDeprecated(long time, WindowWrap<T> windowWrap) {/*Tip:给定的时间，比给定的窗口开始时间起，还在整个窗口数组时间间隙内，都是有效的*/
         return time - windowWrap.windowStart() > intervalInMs;
     }
 

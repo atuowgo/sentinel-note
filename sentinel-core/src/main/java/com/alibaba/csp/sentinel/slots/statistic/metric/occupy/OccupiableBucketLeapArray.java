@@ -28,12 +28,12 @@ import com.alibaba.csp.sentinel.slots.statistic.data.MetricBucket;
  */
 public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
 
-    private final FutureBucketLeapArray borrowArray;
+    private final FutureBucketLeapArray borrowArray;/*Tip:借用的窗口*/
 
     public OccupiableBucketLeapArray(int sampleCount, int intervalInMs) {
         // This class is the original "CombinedBucketArray".
         super(sampleCount, intervalInMs);
-        this.borrowArray = new FutureBucketLeapArray(sampleCount, intervalInMs);
+        this.borrowArray = new FutureBucketLeapArray(sampleCount, intervalInMs);/*Tip:借用的窗口都是后续的窗口*/
     }
 
     @Override
@@ -41,7 +41,7 @@ public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
         MetricBucket newBucket = new MetricBucket();
 
         MetricBucket borrowBucket = borrowArray.getWindowValue(time);
-        if (borrowBucket != null) {
+        if (borrowBucket != null) {/*Tip:如果之前已经被借用过窗口，直接将新窗口设为之前的窗口*/
             newBucket.reset(borrowBucket);
         }
 
@@ -55,7 +55,7 @@ public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
         MetricBucket borrowBucket = borrowArray.getWindowValue(time);
         if (borrowBucket != null) {
             w.value().reset();
-            w.value().addPass((int)borrowBucket.pass());
+            w.value().addPass((int)borrowBucket.pass());/*Tip:将之前被借用过的窗口通过值加入*/
         } else {
             w.value().reset();
         }
@@ -64,7 +64,7 @@ public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
     }
 
     @Override
-    public long currentWaiting() {
+    public long currentWaiting() {/*Tip:borrowArray中借用的总数*/
         borrowArray.currentWindow();
         long currentWaiting = 0;
         List<MetricBucket> list = borrowArray.values();
@@ -76,7 +76,7 @@ public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
     }
 
     @Override
-    public void addWaiting(long time, int acquireCount) {
+    public void addWaiting(long time, int acquireCount) {/*Tip:在借用队列的窗口中，以PASS维度增加所需的token数*/
         WindowWrap<MetricBucket> window = borrowArray.currentWindow(time);
         window.value().add(MetricEvent.PASS, acquireCount);
     }

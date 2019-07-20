@@ -48,16 +48,16 @@ public class DefaultController implements TrafficShapingController {
     @Override
     public boolean canPass(Node node, int acquireCount, boolean prioritized) {
         int curCount = avgUsedTokens(node);
-        if (curCount + acquireCount > count) {//Tip:超过设定的token数量
-            if (prioritized && grade == RuleConstant.FLOW_GRADE_QPS) {//Tip:如果设置了优先级，则等待一定时间
+        if (curCount + acquireCount > count) {/*Tip:超过设定的token数量*/
+            if (prioritized && grade == RuleConstant.FLOW_GRADE_QPS) {/*Tip:如果设置了优先级，则尝试从下一个窗口中获取（通过等待一定时间，将请求拖到下一个窗口），参考https://www.jianshu.com/p/bb73114bcf9e*/
                 long currentTime;
                 long waitInMs;
                 currentTime = TimeUtil.currentTimeMillis();
                 waitInMs = node.tryOccupyNext(currentTime, acquireCount, count);
-                if (waitInMs < OccupyTimeoutProperty.getOccupyTimeout()) {
-                    node.addWaitingRequest(currentTime + waitInMs, acquireCount);
-                    node.addOccupiedPass(acquireCount);
-                    sleep(waitInMs);
+                if (waitInMs < OccupyTimeoutProperty.getOccupyTimeout()) {/*Tip:在允许的等待时间内，等待超时后进入正常流程，PriorityWaitException不是BlockException*/
+                    node.addWaitingRequest(currentTime + waitInMs, acquireCount);/*Tip:增加在borrowArray中*/
+                    node.addOccupiedPass(acquireCount);/*Tip:当前窗口记录借用了多少token*/
+                    sleep(waitInMs);/*Tip：等待到后续窗口*/
 
                     // PriorityWaitException indicates that the request will pass after waiting for {@link @waitInMs}.
                     throw new PriorityWaitException(waitInMs);

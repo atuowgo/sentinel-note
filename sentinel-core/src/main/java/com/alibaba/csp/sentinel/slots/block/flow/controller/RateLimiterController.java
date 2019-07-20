@@ -43,7 +43,7 @@ public class RateLimiterController implements TrafficShapingController {
     }
 
     @Override
-    public boolean canPass(Node node, int acquireCount, boolean prioritized) {
+    public boolean canPass(Node node, int acquireCount, boolean prioritized) {/*Tip:根据速率进行控制，获取token的预计耗时在窗口内，则通过*/
         // Pass when acquire count is less or equal than 0.
         if (acquireCount <= 0) {
             return true;
@@ -56,10 +56,10 @@ public class RateLimiterController implements TrafficShapingController {
 
         long currentTime = TimeUtil.currentTimeMillis();
         // Calculate the interval between every two requests.
-        long costTime = Math.round(1.0 * (acquireCount) / count * 1000);
+        long costTime = Math.round(1.0 * (acquireCount) / count * 1000);/*Tip:获取所需token的平均耗时*/
 
         // Expected pass time of this request.
-        long expectedTime = costTime + latestPassedTime.get();
+        long expectedTime = costTime + latestPassedTime.get();/*Tip:加上上次通过的时间，得出该请求通过的时间点*/
 
         if (expectedTime <= currentTime) {
             // Contention may exist here, but it's okay.
@@ -67,15 +67,15 @@ public class RateLimiterController implements TrafficShapingController {
             return true;
         } else {
             // Calculate the time to wait.
-            long waitTime = costTime + latestPassedTime.get() - TimeUtil.currentTimeMillis();
-            if (waitTime > maxQueueingTimeMs) {
+            long waitTime = costTime + latestPassedTime.get() - TimeUtil.currentTimeMillis();/*Tip:请求通过需要等待的时间*/
+            if (waitTime > maxQueueingTimeMs) {/*Tip:等待时间大于设定的最大窗口间隔，不通过*/
                 return false;
-            } else {
-                long oldTime = latestPassedTime.addAndGet(costTime);
+            } else {/*Tip:等待一定时间后通过*/
+                long oldTime = latestPassedTime.addAndGet(costTime);//加上耗时，更新最近一次通过的时间
                 try {
                     waitTime = oldTime - TimeUtil.currentTimeMillis();
                     if (waitTime > maxQueueingTimeMs) {
-                        latestPassedTime.addAndGet(-costTime);
+                        latestPassedTime.addAndGet(-costTime);//条件不足，回退最近一次通过的时间的累积
                         return false;
                     }
                     // in race condition waitTime may <= 0

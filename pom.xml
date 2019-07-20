@@ -65,33 +65,6 @@
         <maven.jar.version>3.1.0</maven.jar.version>
         <maven.pmd.version>3.8</maven.pmd.version>
     </properties>
-	
-	<repositories>
-		<repository>
-		  <id>wb</id>
-		  <name>wb</name>
-		  <url>http://maven.weoa.com/nexus/content/groups/public/</url>
-		  <releases>
-			<enabled>true</enabled>
-		  </releases>
-		  <snapshots>
-			<enabled>false</enabled>
-		  </snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-		  <id>wb</id>
-		  <name>wb</name>
-		  <url>http://maven.weoa.com/nexus/content/groups/public/</url>
-		  <releases>
-			<enabled>true</enabled>
-		  </releases>
-		  <snapshots>
-			<enabled>false</enabled>
-		  </snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
     <modules>
         <module>sentinel-core</module>
