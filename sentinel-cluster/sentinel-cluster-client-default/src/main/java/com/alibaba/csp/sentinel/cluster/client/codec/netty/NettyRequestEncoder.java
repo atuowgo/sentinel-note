@@ -32,7 +32,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class NettyRequestEncoder extends MessageToByteEncoder<ClusterRequest> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, ClusterRequest request, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, ClusterRequest request, ByteBuf out) throws Exception {/*Tip:统一Encoder服务*/
         RequestEntityWriter<Request, ByteBuf> requestEntityWriter = ClientEntityCodecProvider.getRequestEntityWriter();
         if (requestEntityWriter == null) {
             RecordLog.warn("[NettyRequestEncoder] Cannot resolve the global request entity writer, dropping the request");

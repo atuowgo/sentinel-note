@@ -31,7 +31,7 @@ import com.alibaba.csp.sentinel.init.InitOrder;
  * @since 1.4.0
  */
 @InitOrder(0)
-public class DefaultClusterClientInitFunc implements InitFunc {
+public class DefaultClusterClientInitFunc implements InitFunc {/*Tip:初始化编码器和解码器*/
 
     @Override
     public void init() throws Exception {

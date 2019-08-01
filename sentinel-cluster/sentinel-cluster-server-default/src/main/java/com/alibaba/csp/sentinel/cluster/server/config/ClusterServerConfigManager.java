@@ -118,7 +118,7 @@ public final class ClusterServerConfigManager {
      *
      * @param property server transport configuration dynamic property
      */
-    public static void registerServerTransportProperty(SentinelProperty<ServerTransportConfig> property) {
+    public static void registerServerTransportProperty(SentinelProperty<ServerTransportConfig> property) {/*Tip:服务端端口变化情况*/
         AssertUtil.notNull(property, "cluster server transport config dynamic property cannot be null");
         synchronized (TRANSPORT_PROPERTY_LISTENER) {
             RecordLog.info(

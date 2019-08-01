@@ -86,11 +86,11 @@ public class DefaultClusterTokenClient implements ClusterTokenClient {
     }
 
     private void changeServer(/*@Valid*/ ClusterClientAssignConfig config) {
-        if (serverEqual(serverDescriptor, config)) {
+        if (serverEqual(serverDescriptor, config)) {/*Tip:更新后的服务器为当前服务器，不变*/
             return;
         }
         try {
-            if (transportClient != null) {
+            if (transportClient != null) {/*Tip:客户端已经初始化，先停止，再新建*/
                 transportClient.stop();
             }
             // Replace with new, even if the new client is not ready.
@@ -147,7 +147,7 @@ public class DefaultClusterTokenClient implements ClusterTokenClient {
     }
 
     @Override
-    public TokenResult requestToken(Long flowId, int acquireCount, boolean prioritized) {
+    public TokenResult requestToken(Long flowId, int acquireCount, boolean prioritized) {/*Tip:包装协议对象发送请求*/
         if (notValidRequest(flowId, acquireCount)) {
             return badRequest();
         }

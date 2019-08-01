@@ -45,14 +45,14 @@ public class TokenClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {/*Tip:当客户端connect成功后，更新客户端状态，发送ping消息*/
         currentState.set(ClientConstants.CLIENT_STATUS_STARTED);
         fireClientPing(ctx);
         RecordLog.info("[TokenClientHandler] Client handler active, remote address: " + getRemoteAddress(ctx));
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {/*Tip:收到对方发来的数据后,通过Decoder，解析为ClusterResponse对象，如果是PING响应，打印日志；否则更新TokenClientPromiseHolder中缓存的请求响应*/
         if (msg instanceof ClusterResponse) {
             ClusterResponse<?> response = (ClusterResponse) msg;
 
@@ -61,7 +61,7 @@ public class TokenClientHandler extends ChannelInboundHandlerAdapter {
                 return;
             }
 
-            TokenClientPromiseHolder.completePromise(response.getId(), response);
+            TokenClientPromiseHolder.completePromise(response.getId(), response);/*Tip:发送请求后将请求结果缓存了起来，这里将更新响应值*/
         }
     }
 
@@ -84,7 +84,7 @@ public class TokenClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {/*Tip:出错时日志记录*/
         RecordLog.warn("[TokenClientHandler] Client exception caught", cause);
     }
 
@@ -94,7 +94,7 @@ public class TokenClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {/*Tip:连接中断，更新连接状态，启动重试*/
         RecordLog.info("[TokenClientHandler] Client channel unregistered, remote address: " + getRemoteAddress(ctx));
         currentState.set(ClientConstants.CLIENT_STATUS_OFF);
 

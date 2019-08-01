@@ -33,7 +33,7 @@ public interface ReadableDataSource<S, T> {
      * @return the target data.
      * @throws Exception IO or other error occurs
      */
-    T loadConfig() throws Exception;
+    T loadConfig () throws Exception;
 
     /**
      * Read original data from the data source.
@@ -41,19 +41,19 @@ public interface ReadableDataSource<S, T> {
      * @return the original data.
      * @throws Exception IO or other error occurs
      */
-    S readSource() throws Exception;
+    S readSource () throws Exception;
 
     /**
      * Get {@link SentinelProperty} of the data source.
      *
      * @return the property.
      */
-    SentinelProperty<T> getProperty();
+    SentinelProperty<T> getProperty ();
 
     /**
      * Close the data source.
      *
      * @throws Exception IO or other error occurs
      */
-    void close() throws Exception;
+    void close () throws Exception;
 }

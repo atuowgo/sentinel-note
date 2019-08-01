@@ -37,5 +37,5 @@ public @interface RequestType {
      *
      * @return type of the request
      */
-    int value();
+    int value ();
 }

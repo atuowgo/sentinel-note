@@ -26,5 +26,5 @@ public interface ServerTransportConfigObserver {
      *
      * @param config new server transport config
      */
-    void onTransportConfigChange(ServerTransportConfig config);
+    void onTransportConfigChange (ServerTransportConfig config);
 }

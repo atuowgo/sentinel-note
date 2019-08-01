@@ -83,17 +83,17 @@ public class ClusterMetric {
         }
         metric.addOccupyPass(acquireCount);
         add(ClusterFlowEvent.WAITING, acquireCount);
-        return 1000 / metric.getSampleCount();
+        return 1000 / metric.getSampleCount();/*Tip:等待时间为一秒内一个格子的时间*/
     }
 
     private boolean canOccupy(ClusterFlowEvent event, int acquireCount, double latestQps, double threshold) {
-        long headPass = metric.getFirstCountOfWindow(event);
-        long occupiedCount = metric.getOccupiedCount(event);
+        long headPass = metric.getFirstCountOfWindow(event);/*Tip:队列中的第一个窗格*/
+        long occupiedCount = metric.getOccupiedCount(event);/*Tip:当前窗格已经被占用的个数*/
         //  bucket to occupy (= incoming bucket)
         //       ↓
         // | head bucket |    |    |    | current bucket |
         // +-------------+----+----+----+----------- ----+
         //   (headPass)
-        return latestQps + (acquireCount + occupiedCount) - headPass <= threshold;
+        return latestQps + (acquireCount + occupiedCount) - headPass <= threshold;/*Tip:根据之前的窗格估算请求能够通过*/
     }
 }

@@ -26,5 +26,5 @@ public interface ServerChangeObserver {
      *
      * @param assignConfig new cluster assignment config
      */
-    void onRemoteServerChange(ClusterClientAssignConfig assignConfig);
+    void onRemoteServerChange (ClusterClientAssignConfig assignConfig);
 }

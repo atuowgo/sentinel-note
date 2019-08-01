@@ -28,12 +28,12 @@ public interface Request {
      *
      * @return request type
      */
-    int getType();
+    int getType ();
 
     /**
      * Get request ID.
      *
      * @return unique request ID
      */
-    int getId();
+    int getId ();
 }

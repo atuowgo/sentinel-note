@@ -31,14 +31,14 @@ public interface ClusterTransportClient {
      *
      * @throws Exception some error occurred (e.g. initialization failed)
      */
-    void start() throws Exception;
+    void start () throws Exception;
 
     /**
      * Stop the client.
      *
      * @throws Exception some error occurred (e.g. shutdown failed)
      */
-    void stop() throws Exception;
+    void stop () throws Exception;
 
     /**
      * Send request to remote server and get response.
@@ -47,12 +47,12 @@ public interface ClusterTransportClient {
      * @return response from remote server
      * @throws Exception some error occurs
      */
-    ClusterResponse sendRequest(ClusterRequest request) throws Exception;
+    ClusterResponse sendRequest (ClusterRequest request) throws Exception;
 
     /**
      * Check whether the client has been started and ready for sending requests.
      *
      * @return true if the client is ready to send requests, otherwise false
      */
-    boolean isReady();
+    boolean isReady ();
 }

@@ -45,33 +45,33 @@ public class TokenServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {/*Tip:连接建立后缓存起来*/
         globalConnectionPool.createConnection(ctx.channel());
         String remoteAddress = getRemoteAddress(ctx);
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {/*Tip:连接端口后删除缓存*/
         String remoteAddress = getRemoteAddress(ctx);
-        globalConnectionPool.remove(ctx.channel());
+        globalConnectionPool.remove(ctx.channel());/*Tip:新连接时，将之前的缓存移除*/
         ConnectionManager.removeConnection(remoteAddress);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        globalConnectionPool.refreshLastReadTime(ctx.channel());
+        globalConnectionPool.refreshLastReadTime(ctx.channel());/*Tip:更新缓存时间*/
         if (msg instanceof ClusterRequest) {
             ClusterRequest request = (ClusterRequest)msg;
 
             // Client ping with its namespace, add to connection manager.
-            if (request.getType() == ClusterConstants.MSG_TYPE_PING) {
+            if (request.getType() == ClusterConstants.MSG_TYPE_PING) {/*Tip:如果是PING请求则回复PONG*/
                 handlePingRequest(ctx, request);
                 return;
             }
 
             // Pick request processor for request type.
-            RequestProcessor<?, ?> processor = RequestProcessorProvider.getProcessor(request.getType());
+            RequestProcessor<?, ?> processor = RequestProcessorProvider.getProcessor(request.getType());/*Tip:获取对应消息的处理器进行处理*/
             if (processor == null) {
                 RecordLog.warn("[TokenServerHandler] No processor for request type: " + request.getType());
                 writeBadResponse(ctx, request);

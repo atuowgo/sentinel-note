@@ -31,7 +31,7 @@ public interface Encoder<R> {
      * @param clazz type of the class
      * @return {@code true} if supported, {@code false} otherwise
      */
-    boolean canEncode(Class<?> clazz);
+    boolean canEncode (Class<?> clazz);
 
     /**
      * Encode the given object into a byte array with the given charset.
@@ -41,7 +41,7 @@ public interface Encoder<R> {
      * @return the encoded byte buffer
      * @throws Exception error occurs when encoding the object (e.g. IO fails)
      */
-    byte[] encode(R r, Charset charset) throws Exception;
+    byte[] encode (R r, Charset charset) throws Exception;
 
     /**
      * Encode the given object into a byte array with the default charset.
@@ -50,5 +50,5 @@ public interface Encoder<R> {
      * @return the encoded byte buffer, witch is already flipped.
      * @throws Exception error occurs when encoding the object (e.g. IO fails)
      */
-    byte[] encode(R r) throws Exception;
+    byte[] encode (R r) throws Exception;
 }

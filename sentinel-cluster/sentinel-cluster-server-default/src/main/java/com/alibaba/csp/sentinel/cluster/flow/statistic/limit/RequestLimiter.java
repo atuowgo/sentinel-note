@@ -26,14 +26,14 @@ import com.alibaba.csp.sentinel.util.AssertUtil;
  * @author Eric Zhao
  * @since 1.4.1
  */
-public class RequestLimiter {
+public class RequestLimiter {/*Tip:只统计qps*/
 
     private double qpsAllowed;
 
     private final LeapArray<LongAdder> data;
 
     public RequestLimiter(double qpsAllowed) {
-        this(new UnaryLeapArray(10, 1000), qpsAllowed);
+        this(new UnaryLeapArray(10, 1000), qpsAllowed);/*Tip:一秒内10个格子*/
     }
 
     RequestLimiter(LeapArray<LongAdder> data, double qpsAllowed) {
@@ -78,7 +78,7 @@ public class RequestLimiter {
         return this;
     }
 
-    public boolean tryPass() {
+    public boolean tryPass() {/*Tip:判断当前qps是否达到设置的最大的qps值，没有则通过，否则拒绝*/
         if (canPass()) {
             add(1);
             return true;

@@ -31,7 +31,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
  * @author Eric Zhao
  * @since 1.4.0
  */
-public class DefaultTokenService implements TokenService {
+public class DefaultTokenService implements TokenService {/*Tip:cluster token服务实现*/
 
     @Override
     public TokenResult requestToken(Long ruleId, int acquireCount, boolean prioritized) {

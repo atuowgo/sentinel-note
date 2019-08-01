@@ -31,5 +31,5 @@ public interface EntityWriter<E, T> {
      * @param entity entity to publish
      * @param target the target stream
      */
-    void writeTo(E entity, T target);
+    void writeTo (E entity, T target);
 }

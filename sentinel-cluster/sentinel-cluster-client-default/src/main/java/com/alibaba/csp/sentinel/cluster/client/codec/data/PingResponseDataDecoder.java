@@ -28,7 +28,7 @@ public class PingResponseDataDecoder implements EntityDecoder<ByteBuf, Integer> 
     @Override
     public Integer decode(ByteBuf source) {
         if (source.readableBytes() >= 1) {
-            return (int) source.readByte();
+            return (int) source.readByte();//Ping状态
         }
         return -1;
     }

@@ -31,8 +31,8 @@ public class FlowResponseDataDecoder implements EntityDecoder<ByteBuf, FlowToken
         FlowTokenResponseData data = new FlowTokenResponseData();
 
         if (source.readableBytes() == 8) {
-            data.setRemainingCount(source.readInt());
-            data.setWaitInMs(source.readInt());
+            data.setRemainingCount(source.readInt());/*Tip:剩余token数*/
+            data.setWaitInMs(source.readInt());/*Tip:等待token数*/
         }
         return data;
     }

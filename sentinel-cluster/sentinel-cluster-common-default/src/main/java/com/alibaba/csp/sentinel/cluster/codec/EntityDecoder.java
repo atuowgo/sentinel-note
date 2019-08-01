@@ -29,5 +29,5 @@ public interface EntityDecoder<S, T> {
      * @param source source stream
      * @return decoded target object
      */
-    T decode(S source);
+    T decode (S source);
 }

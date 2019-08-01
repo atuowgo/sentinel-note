@@ -28,5 +28,5 @@ public interface CommandHandler<R> {
      * @param request the request to handle
      * @return the response
      */
-    CommandResponse<R> handle(CommandRequest request);
+    CommandResponse<R> handle (CommandRequest request);
 }

@@ -348,13 +348,13 @@ public final class ClusterFlowRuleManager {
             if (flowId == null) {
                 continue;
             }
-            ruleMap.put(flowId, rule);
+            ruleMap.put(flowId, rule);/*Tip:存放规则*/
             FLOW_NAMESPACE_MAP.put(flowId, namespace);
             flowIdSet.add(flowId);
 
             // Prepare cluster metric from valid flow ID.
             ClusterMetricStatistics.putMetricIfAbsent(flowId,
-                new ClusterMetric(clusterConfig.getSampleCount(), clusterConfig.getWindowIntervalMs()));
+                new ClusterMetric(clusterConfig.getSampleCount(), clusterConfig.getWindowIntervalMs()));/*Tip:根据规则ID，初始化统计节点*/
         }
 
         // Cleanup unused cluster metrics.

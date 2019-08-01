@@ -34,7 +34,7 @@ import com.alibaba.csp.sentinel.util.StringUtil;
  * @author Eric Zhao
  * @since 1.4.0
  */
-public class SentinelDefaultTokenServer implements ClusterTokenServer {
+public class SentinelDefaultTokenServer implements ClusterTokenServer {/*Tip:包装NettyTransportServer，在配置发生更改时自动更新Server对象*/
 
     private final boolean embedded;
 

@@ -113,7 +113,7 @@ public class NettyTransportServer implements ClusterTokenServer {
 
                     try {
                         Thread.sleep(failCount * RETRY_SLEEP_MS);
-                        start();
+                        start();/*Tip:启动失败，暂停一定时间后重试*/
                     } catch (Throwable e) {
                         RecordLog.info("[NettyTransportServer] Failed to start token server when retrying", e);
                     }

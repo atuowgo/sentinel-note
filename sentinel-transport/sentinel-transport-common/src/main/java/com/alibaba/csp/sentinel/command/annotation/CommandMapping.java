@@ -25,7 +25,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface CommandMapping {
 
-    String name();
+    String name ();
 
     /**
      * Get brief description of the command.
@@ -33,5 +33,5 @@ public @interface CommandMapping {
      * @return brief description of the command
      * @since 1.5.0
      */
-    String desc();
+    String desc ();
 }

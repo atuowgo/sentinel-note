@@ -35,7 +35,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
  */
 final class ClusterFlowChecker {
 
-    private static double calcGlobalThreshold(FlowRule rule) {
+    private static double calcGlobalThreshold(FlowRule rule) {/*Tip:计算规则的全局阈值：如果该规则作用于全局，则直接返回设定的值；如果设置的是本地值，则乘上已经连上的客户端数量*/
         double count = rule.getCount();
         switch (rule.getClusterConfig().getThresholdType()) {
             case ClusterRuleConstant.FLOW_THRESHOLD_GLOBAL:
@@ -55,7 +55,7 @@ final class ClusterFlowChecker {
     static TokenResult acquireClusterToken(/*@Valid*/ FlowRule rule, int acquireCount, boolean prioritized) {
         Long id = rule.getClusterConfig().getFlowId();
 
-        if (!allowProceed(id)) {
+        if (!allowProceed(id)) {/*Tip:先判断全局限流是否能通过*/
             return new TokenResult(TokenResultStatus.TOO_MANY_REQUEST);
         }
 
@@ -68,7 +68,7 @@ final class ClusterFlowChecker {
         double globalThreshold = calcGlobalThreshold(rule) * ClusterServerConfigManager.getExceedCount();
         double nextRemaining = globalThreshold - latestQps - acquireCount;
 
-        if (nextRemaining >= 0) {
+        if (nextRemaining >= 0) {/*Tip:当前窗口有足够的token*/
             // TODO: checking logic and metric operation should be separated.
             metric.add(ClusterFlowEvent.PASS, acquireCount);
             metric.add(ClusterFlowEvent.PASS_REQUEST, 1);
@@ -80,14 +80,14 @@ final class ClusterFlowChecker {
             return new TokenResult(TokenResultStatus.OK)
                 .setRemaining((int) nextRemaining)
                 .setWaitInMs(0);
-        } else {
-            if (prioritized) {
+        } else {/*Tip:当前窗口没有可用的token*/
+            if (prioritized) {/*Tip:支持优先，尝试从下一个格子借用token(本地模式的借用会从后面的格子借用，只要不超过最大的等待时间)*/
                 // Try to occupy incoming buckets.
                 double occupyAvg = metric.getAvg(ClusterFlowEvent.WAITING);
                 if (occupyAvg <= ClusterServerConfigManager.getMaxOccupyRatio() * globalThreshold) {
                     int waitInMs = metric.tryOccupyNext(ClusterFlowEvent.PASS, acquireCount, globalThreshold);
                     // waitInMs > 0 indicates pre-occupy incoming buckets successfully.
-                    if (waitInMs > 0) {
+                    if (waitInMs > 0) {/*Tip:下一个窗口有可借用的token，等待一个格子的时间*/
                         ClusterServerStatLogUtil.log("flow|waiting|" + id);
                         return new TokenResult(TokenResultStatus.SHOULD_WAIT)
                             .setRemaining(0)

@@ -32,8 +32,8 @@ public class FlowRequestDataWriter implements EntityWriter<FlowRequestData, Byte
 
     @Override
     public void writeTo(FlowRequestData entity, ByteBuf target) {
-        target.writeLong(entity.getFlowId());
-        target.writeInt(entity.getCount());
-        target.writeBoolean(entity.isPriority());
+        target.writeLong(entity.getFlowId());/*Tip:FlowId*/
+        target.writeInt(entity.getCount());/*Tip:获取Token数*/
+        target.writeBoolean(entity.isPriority());/*Tip:是否支持优先级*/
     }
 }

@@ -28,19 +28,19 @@ public interface Response {
      *
      * @return response ID
      */
-    int getId();
+    int getId ();
 
     /**
      * Get response type.
      *
      * @return response type
      */
-    int getType();
+    int getType ();
 
     /**
      * Get response status.
      *
      * @return response status
      */
-    int getStatus();
+    int getStatus ();
 }

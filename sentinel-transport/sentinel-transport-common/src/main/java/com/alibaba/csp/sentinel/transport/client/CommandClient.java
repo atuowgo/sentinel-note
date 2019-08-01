@@ -34,5 +34,5 @@ public interface CommandClient {
      * @return the response from target command server
      * @throws Exception when unexpected error occurs
      */
-    CommandResponse sendCommand(String host, int port, CommandRequest request) throws Exception;
+    CommandResponse sendCommand (String host, int port, CommandRequest request) throws Exception;
 }

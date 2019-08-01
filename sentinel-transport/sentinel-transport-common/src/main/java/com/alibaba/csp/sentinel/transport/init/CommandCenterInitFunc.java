@@ -28,7 +28,7 @@ import com.alibaba.csp.sentinel.transport.CommandCenter;
 public class CommandCenterInitFunc implements InitFunc {
 
     @Override
-    public void init() throws Exception {
+    public void init() throws Exception {/*Tip:引入相关包，只要有相关的实现，则启动server*/
         CommandCenter commandCenter = CommandCenterProvider.getCommandCenter();
 
         if (commandCenter == null) {

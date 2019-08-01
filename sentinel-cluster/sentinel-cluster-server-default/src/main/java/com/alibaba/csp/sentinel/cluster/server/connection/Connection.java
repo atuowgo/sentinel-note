@@ -24,15 +24,15 @@ import java.net.SocketAddress;
  */
 public interface Connection extends AutoCloseable {
 
-    SocketAddress getLocalAddress();
+    SocketAddress getLocalAddress ();
 
-    int getRemotePort();
+    int getRemotePort ();
 
-    String getRemoteIP();
+    String getRemoteIP ();
 
-    void refreshLastReadTime(long lastReadTime);
+    void refreshLastReadTime (long lastReadTime);
 
-    long getLastReadTime();
+    long getLastReadTime ();
 
-    String getConnectionKey();
+    String getConnectionKey ();
 }

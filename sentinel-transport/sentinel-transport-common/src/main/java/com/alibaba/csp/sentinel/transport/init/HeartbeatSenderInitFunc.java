@@ -49,7 +49,7 @@ public class HeartbeatSenderInitFunc implements InitFunc {
 
     @Override
     public void init() {
-        HeartbeatSender sender = HeartbeatSenderProvider.getHeartbeatSender();
+        HeartbeatSender sender = HeartbeatSenderProvider.getHeartbeatSender();/*Tip:启动时，只要引用了相关包，会自动定时发送心跳*/
         if (sender == null) {
             RecordLog.warn("[HeartbeatSenderInitFunc] WARN: No HeartbeatSender loaded");
             return;

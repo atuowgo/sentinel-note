@@ -122,7 +122,7 @@ public class ClusterParamMetric {
 
         int size = list.size() > number ? number : list.size();
         for (int i = 0; i < size; i++) {
-            Map.Entry<Object, Long> x = list.get(i);
+            Entry<Object, Long> x = list.get(i);
             if (x.getValue() == 0) {
                 break;
             }

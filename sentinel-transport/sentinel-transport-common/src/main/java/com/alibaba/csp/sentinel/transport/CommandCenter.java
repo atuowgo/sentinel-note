@@ -26,7 +26,7 @@ public interface CommandCenter {
      *
      * @throws Exception if error occurs
      */
-    void beforeStart() throws Exception;
+    void beforeStart () throws Exception;
 
     /**
      * Start the command center in the background.
@@ -34,12 +34,12 @@ public interface CommandCenter {
      *
      * @throws Exception if error occurs
      */
-    void start() throws Exception;
+    void start () throws Exception;
 
     /**
      * Stop the command center and do cleanup.
      *
      * @throws Exception if error occurs
      */
-    void stop() throws Exception;
+    void stop () throws Exception;
 }

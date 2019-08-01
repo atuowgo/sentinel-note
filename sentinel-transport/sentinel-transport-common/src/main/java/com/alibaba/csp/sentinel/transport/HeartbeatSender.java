@@ -32,7 +32,7 @@ public interface HeartbeatSender {
      * @return whether heartbeat is successfully send.
      * @throws Exception if error occurs
      */
-    boolean sendHeartbeat() throws Exception;
+    boolean sendHeartbeat () throws Exception;
 
     /**
      * Default interval in milliseconds of the sender. It would take effect only when
@@ -40,5 +40,5 @@ public interface HeartbeatSender {
      *
      * @return default interval of the sender in milliseconds
      */
-    long intervalMs();
+    long intervalMs ();
 }

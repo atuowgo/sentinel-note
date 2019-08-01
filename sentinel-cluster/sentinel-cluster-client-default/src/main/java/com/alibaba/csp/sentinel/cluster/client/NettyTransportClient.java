@@ -101,9 +101,9 @@ public class NettyTransportClient implements ClusterTransportClient {
 
                     ChannelPipeline pipeline = ch.pipeline();
                     pipeline.addLast(new LengthFieldBasedFrameDecoder(1024, 0, 2, 0, 2));
-                    pipeline.addLast(new NettyResponseDecoder());
+                    pipeline.addLast(new NettyResponseDecoder());/*Tip:读取时使用Decoder解码*/
                     pipeline.addLast(new LengthFieldPrepender(2));
-                    pipeline.addLast(new NettyRequestEncoder());
+                    pipeline.addLast(new NettyRequestEncoder());/*Tip:发送时使用Writer编码*/
                     pipeline.addLast(clientHandler);
                 }
             });
@@ -134,7 +134,7 @@ public class NettyTransportClient implements ClusterTransportClient {
         }
     }
 
-    private Runnable disconnectCallback = new Runnable() {
+    private Runnable disconnectCallback = new Runnable() {/*Tip:在连接断开时，将在等待一段时间后进行重连，等待时间为2000*(失败次数+1)，只重试一次*/
         @Override
         public void run() {
             if (!shouldRetry.get()) {
@@ -222,7 +222,7 @@ public class NettyTransportClient implements ClusterTransportClient {
             ChannelPromise promise = channel.newPromise();
             TokenClientPromiseHolder.putPromise(xid, promise);
 
-            if (!promise.await(ClusterClientConfigManager.getRequestTimeout())) {
+            if (!promise.await(ClusterClientConfigManager.getRequestTimeout())) {/*Tip:等到异步请求完成*/
                 throw new SentinelClusterException(ClusterErrorMessages.REQUEST_TIME_OUT);
             }
 

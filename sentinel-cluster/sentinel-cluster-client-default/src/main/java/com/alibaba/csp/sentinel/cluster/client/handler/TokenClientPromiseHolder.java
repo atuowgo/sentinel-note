@@ -27,7 +27,7 @@ import io.netty.channel.ChannelPromise;
  * @author Eric Zhao
  * @since 1.4.0
  */
-public final class TokenClientPromiseHolder {
+public final class TokenClientPromiseHolder {/*Tip:每个请求有唯一Id，异步发送后会缓存id对应的请求，然后等待请求完成，完成后将根据Id更新结果*/
 
     private static final Map<Integer, SimpleEntry<ChannelPromise, ClusterResponse>> PROMISE_MAP = new ConcurrentHashMap<>();
 

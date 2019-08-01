@@ -36,7 +36,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 public class NettyResponseDecoder extends ByteToMessageDecoder {
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {/*Tip:统一Decoder服务*/
         ResponseEntityDecoder<ByteBuf, Response> responseDecoder = ClientEntityCodecProvider.getResponseEntityDecoder();
         if (responseDecoder == null) {
             RecordLog.warn("[NettyResponseDecoder] Cannot resolve the global response entity decoder, "

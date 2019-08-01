@@ -53,7 +53,7 @@ public class ClusterMetricLeapArray extends LeapArray<ClusterMetricBucket> {
     }
 
     private void transferOccupyToBucket(/*@Valid*/ ClusterMetricBucket bucket) {
-        if (hasOccupied) {
+        if (hasOccupied) {/*Tip:如果之前有被占用过请求，便将请求值累计到当前窗口*/
             transferOccupiedCount(bucket, ClusterFlowEvent.PASS, ClusterFlowEvent.OCCUPIED_PASS);
             transferOccupiedThenReset(bucket, ClusterFlowEvent.PASS);
             transferOccupiedThenReset(bucket, ClusterFlowEvent.PASS_REQUEST);

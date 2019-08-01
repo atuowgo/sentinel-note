@@ -66,7 +66,7 @@ public final class ClusterClientConfigManager {
         clientConfigProperty.removeListener(CONFIG_PROPERTY_LISTENER);
     }
 
-    public static void registerServerAssignProperty(SentinelProperty<ClusterClientAssignConfig> property) {
+    public static void registerServerAssignProperty(SentinelProperty<ClusterClientAssignConfig> property) {/*Tip:注册服务端节点*/
         AssertUtil.notNull(property, "property cannot be null");
         synchronized (ASSIGN_PROPERTY_LISTENER) {
             RecordLog.info("[ClusterClientConfigManager] Registering new server assignment property to cluster "
@@ -77,7 +77,7 @@ public final class ClusterClientConfigManager {
         }
     }
 
-    public static void registerClientConfigProperty(SentinelProperty<ClusterClientConfig> property) {
+    public static void registerClientConfigProperty(SentinelProperty<ClusterClientConfig> property) {/*Tip:注册客户端节点*/
         AssertUtil.notNull(property, "property cannot be null");
         synchronized (CONFIG_PROPERTY_LISTENER) {
             RecordLog.info("[ClusterClientConfigManager] Registering new global client config property to "
@@ -153,7 +153,7 @@ public final class ClusterClientConfigManager {
             applyConfig(config);
         }
 
-        private synchronized void applyConfig(ClusterClientConfig config) {
+        private synchronized void applyConfig(ClusterClientConfig config) {/*Tip:更新客户端配置信息*/
             if (!isValidClientConfig(config)) {
                 RecordLog.warn(
                     "[ClusterClientConfigManager] Invalid cluster client config, ignoring: " + config);

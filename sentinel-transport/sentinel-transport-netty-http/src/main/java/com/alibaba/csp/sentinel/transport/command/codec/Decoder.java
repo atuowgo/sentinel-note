@@ -31,7 +31,7 @@ public interface Decoder<R> {
      * @param clazz type of the class
      * @return {@code true} if supported, {@code false} otherwise
      */
-    boolean canDecode(Class<?> clazz);
+    boolean canDecode (Class<?> clazz);
 
     /**
      * Decode the given byte array into an object of type {@code R} with the default charset.
@@ -40,7 +40,7 @@ public interface Decoder<R> {
      * @return the decoded target object
      * @throws Exception error occurs when decoding the object (e.g. IO fails)
      */
-    R decode(byte[] bytes) throws Exception;
+    R decode (byte[] bytes) throws Exception;
 
     /**
      * Decode the given byte array into an object of type {@code R} with the given charset.
@@ -50,5 +50,5 @@ public interface Decoder<R> {
      * @return the decoded target object
      * @throws Exception error occurs when decoding the object (e.g. IO fails)
      */
-    R decode(byte[] bytes, Charset charset) throws Exception;
+    R decode (byte[] bytes, Charset charset) throws Exception;
 }

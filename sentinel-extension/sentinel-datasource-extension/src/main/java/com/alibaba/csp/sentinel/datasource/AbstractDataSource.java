@@ -28,8 +28,8 @@ import com.alibaba.csp.sentinel.property.SentinelProperty;
  */
 public abstract class AbstractDataSource<S, T> implements ReadableDataSource<S, T> {
 
-    protected final Converter<S, T> parser;
-    protected final SentinelProperty<T> property;
+    protected final Converter<S, T> parser;/*Tip:数据源数据处理类，将数据源中存储的S类型，处理为目标T类型*/
+    protected final SentinelProperty<T> property;/*Tip:数据源集合，默认为DynamicSentinelProperty实现，持有一个监听器列表，在数据更新时调用updateValue可以通知观察者*/
 
     public AbstractDataSource(Converter<S, T> parser) {
         if (parser == null) {
@@ -41,7 +41,7 @@ public abstract class AbstractDataSource<S, T> implements ReadableDataSource<S, 
 
     @Override
     public T loadConfig() throws Exception {
-        return loadConfig(readSource());
+        return loadConfig(readSource());/*Tip:loadConfig会请求readSource，从源头读取数据*/
     }
 
     public T loadConfig(S conf) throws Exception {
@@ -50,7 +50,7 @@ public abstract class AbstractDataSource<S, T> implements ReadableDataSource<S, 
     }
 
     @Override
-    public SentinelProperty<T> getProperty() {
+    public SentinelProperty<T> getProperty() {/*Tip:getProperty().updateValue()以便通知观察者*/
         return property;
     }
 }

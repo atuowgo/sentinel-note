@@ -48,7 +48,7 @@ public final class GlobalRequestLimiter {
             return false;
         }
         RequestLimiter limiter = GLOBAL_QPS_LIMITER_MAP.get(namespace);
-        if (limiter == null) {
+        if (limiter == null) {/*Tip:没有对namespace设置全局限流则直接通过*/
             return true;
         }
         return limiter.tryPass();

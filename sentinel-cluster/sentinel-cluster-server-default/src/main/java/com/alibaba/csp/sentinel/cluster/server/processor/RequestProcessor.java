@@ -34,5 +34,5 @@ public interface RequestProcessor<T, R> {
      * @param request Sentinel cluster request
      * @return the response after processed
      */
-    ClusterResponse<R> processRequest(ClusterRequest<T> request);
+    ClusterResponse<R> processRequest (ClusterRequest<T> request);
 }

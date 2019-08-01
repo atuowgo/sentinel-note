@@ -39,7 +39,7 @@ import com.alibaba.nacos.api.config.listener.Listener;
  *
  * @author Eric Zhao
  */
-public class NacosDataSource<T> extends AbstractDataSource<String, T> {
+public class NacosDataSource<T> extends AbstractDataSource<String, T> {/*Tip:初始化时从nacos拉取数据，并启动配置服务，当nacos有数据变更时，通知配置源上的监听器，从而通知数据源持有者进行处理*/
 
     private static final int DEFAULT_TIMEOUT = 3000;
 
@@ -103,11 +103,11 @@ public class NacosDataSource<T> extends AbstractDataSource<String, T> {
                     properties, dataId, groupId, configInfo));
                 T newValue = NacosDataSource.this.parser.convert(configInfo);
                 // Update the new value to the property.
-                getProperty().updateValue(newValue);
+                getProperty().updateValue(newValue);/*Tip:当接收到新的配置信息时，调用DynamicSentinelProperty的updateValue方法，该烦方法会把在改数据源上的监听器都执行一遍，以通知数据源持有者*/
             }
         };
         initNacosListener();
-        loadInitialConfig();
+        loadInitialConfig();/*Tip:初始化先loadConfig一遍,会先从nacos把数据拉下来*/
     }
 
     private void loadInitialConfig() {
@@ -116,7 +116,7 @@ public class NacosDataSource<T> extends AbstractDataSource<String, T> {
             if (newValue == null) {
                 RecordLog.warn("[NacosDataSource] WARN: initial config is null, you may have to check your data source");
             }
-            getProperty().updateValue(newValue);
+            getProperty().updateValue(newValue);/*Tip:更新property中的值并通知配置集上的监听器*/
         } catch (Exception ex) {
             RecordLog.warn("[NacosDataSource] Error when loading initial config", ex);
         }
@@ -126,7 +126,7 @@ public class NacosDataSource<T> extends AbstractDataSource<String, T> {
         try {
             this.configService = NacosFactory.createConfigService(this.properties);
             // Add config listener.
-            configService.addListener(dataId, groupId, configListener);
+            configService.addListener(dataId, groupId, configListener);/*Tip:创建配置服务并注册监听器*/
         } catch (Exception e) {
             RecordLog.warn("[NacosDataSource] Error occurred when initializing Nacos data source", e);
             e.printStackTrace();
@@ -134,7 +134,7 @@ public class NacosDataSource<T> extends AbstractDataSource<String, T> {
     }
 
     @Override
-    public String readSource() throws Exception {
+    public String readSource() throws Exception {/*Tip:从nacos配置中心获取数据*/
         if (configService == null) {
             throw new IllegalStateException("Nacos config service has not been initialized or error occurred");
         }
